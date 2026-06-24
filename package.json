@@ -15,10 +15,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Najtal/gsheet-i18n"
+    "url": "https://github.com/Najtal/gsheets-i18n"
   },
   "bugs": {
-    "url": "https://github.com/Najtal/gsheet-i18n/issues"
+    "url": "https://github.com/Najtal/gsheets-i18n/issues"
   },
   "type": "module",
   "main": "./dist/cjs/index.js",
