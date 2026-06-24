@@ -28,7 +28,7 @@ export type {
  *   serviceAccountKey: "./service-account.json",
  *   source: {
  *     mode: "sheet",
- *     spreadsheetId: "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
+ *     spreadsheetId: "4BxiM********upms",
  *   },
  *   outputDir: "./src/locales",
  * });
