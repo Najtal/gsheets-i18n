@@ -1,0 +1,62 @@
+{
+  "name": "gsheets-i18n",
+  "version": "1.0.0",
+  "description": "Generate i18n JSON files from a Google Spreadsheet",
+  "author": "Jv Durieu",
+  "license": "MIT",
+  "keywords": [
+    "i18n",
+    "i18next",
+    "google-sheets",
+    "google-spreadsheet",
+    "localization",
+    "translation",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Najtal/gsheet-i18n"
+  },
+  "bugs": {
+    "url": "https://github.com/Najtal/gsheet-i18n/issues"
+  },
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "bin": {
+    "sheets-i18n": "./dist/esm/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "dev": "tsc -p tsconfig.esm.json --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}
