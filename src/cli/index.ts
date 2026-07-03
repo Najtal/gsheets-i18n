@@ -27,7 +27,7 @@ program
   .description(
     "Generate i18n JSON files from a Google Spreadsheet or Drive folder."
   )
-  .version("1.0.0");
+  .version("1.0.1");
 
 // ── sheet command ─────────────────────────────────────────────────────────────
 program
