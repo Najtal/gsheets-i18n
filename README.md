@@ -1,8 +1,12 @@
 # gsheets-i18n
 
-Generate i18n JSON files from a Google Spreadsheet — as a CLI tool or a Node.js library.
+Generate i18n JSON files from a Google Translation in Google Sheets 
+Translate in a versioned web envitonment, and use as a CLI tool or a Node.js library to push into your project.
 
 Each tab of your spreadsheet becomes a **namespace**, each row a **translation key**, and each language column an output file. The result is one `<locale>.json` file per language, with nested keys, ready to drop into React i18next, Vue i18n, or any similar framework.
+
+
+![Alt text](https://example.com/image.jpg)
 
 ---
 
