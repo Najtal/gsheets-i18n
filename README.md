@@ -6,7 +6,25 @@ Translate in a versioned web envitonment, and use as a CLI tool or a Node.js lib
 Each tab of your spreadsheet becomes a **namespace**, each row a **translation key**, and each language column an output file. The result is one `<locale>.json` file per language, with nested keys, ready to drop into React i18next, Vue i18n, or any similar framework.
 
 
-![Alt text](https://example.com/image.jpg)
+## Overview
+
+#### Simple to use, simple to build
+![Simple to use, simple to build](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20use%20google%20sheet%20to%20automate%20translations%20explained.png)
+
+#### Add an entry
+![Add an entry](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20add%20entry.gif)
+
+#### Automated translations
+![Automated translations](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20value.gif)
+
+#### Set static values (manually defined)
+![Set static values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20set%20static%20value.gif)
+
+#### Set languages
+![Set languages](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20language.gif)
+
+> 😎 Import the [demo spreadsheet](https://github.com/Najtal/gsheets-i18n/raw/refs/heads/main/assets/sample-automated-i18n.xlsx) into your Google Drive and start right away.
+
 
 ---
 
