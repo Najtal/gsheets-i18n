@@ -1,242 +1,77 @@
-# gsheets-i18n
+# 📊🤌 gsheets-i18n
 
-Generate i18n JSON files from a Google Translation in Google Sheets 
-Translate in a versioned web envitonment, and use as a CLI tool or a Node.js library to push into your project.
+> Manage app translations in Google Sheets. Generate i18n JSON files with one command.
 
-Each tab of your spreadsheet becomes a **namespace**, each row a **translation key**, and each language column an output file. The result is one `<locale>.json` file per language, with nested keys, ready to drop into React i18next, Vue i18n, or any similar framework.
+[![npm version](https://img.shields.io/npm/v/gsheets-i18n.svg)](https://www.npmjs.com/package/gsheets-i18n) [![npm downloads](https://img.shields.io/npm/dm/gsheets-i18n.svg)](https://www.npmjs.com/package/gsheets-i18n) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/Najtal/gsheets-i18n)](https://github.com/Najtal/gsheets-i18n) [![Node version](https://img.shields.io/badge/Node-%E2%89%A518-brightgreen.svg)](package.json)
 
+---
 
-## Overview
+## 1. Why gsheets-i18n?
 
-#### Simple to use, simple to build
-![Simple to use, simple to build](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20use%20google%20sheet%20to%20automate%20translations%20explained.png)
-
-#### Add an entry
-![Add an entry](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20add%20entry.gif)
-
-#### Automated translations
-![Automated translations](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20value.gif)
-
-#### Set static values (manually defined)
-![Set static values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20set%20static%20value.gif)
-
-#### Set languages
-![Set languages](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20language.gif)
-
-> 😎 Import the [demo spreadsheet](https://github.com/Najtal/gsheets-i18n/raw/refs/heads/main/assets/sample-automated-i18n.xlsx) into your Google Drive and start right away.
-
+- **Single source of truth** — Translators edit Google Sheets, developers pull JSON
+- **Real-time collaboration** — No version conflicts, no code required for non-devs
+- **Framework-agnostic** — Works with i18next, Vue i18n, Angular, etc.
+- **Nested keys** — Dot notation (`modal.title`) auto-generates hierarchical JSON
+- **Batch processing** — Extract from multiple spreadsheets at once
+- **Zero production overhead** — Generates static JSON, no runtime dependencies
 
 ---
 
 ## Table of Contents
 
-- [How it works](#how-it-works)
-- [Installation](#installation)
-- [Google Setup](#google-setup)
-- [Spreadsheet Format](#spreadsheet-format)
-- [CLI Usage](#cli-usage)
-- [Programmatic API](#programmatic-api)
-- [Key Mapping](#key-mapping)
-- [Folder Mode](#folder-mode)
-- [Configuration Reference](#configuration-reference)
+- [1. Why gsheets-i18n?](#1-why-gsheets-i18n)
+- [2. Overview](#2-overview)
+- [3. Quick Start](#3-quick-start)
+- [4. How It Works](#4-how-it-works)
+- [5. How It Compares](#5-how-it-compares)
+- [6. CLI Reference](#6-cli-reference)
+- [7. Programmatic API](#7-programmatic-api)
+- [8. Supported Languages](#8-supported-languages)
+- [9. Advanced Features](#9-advanced-features)
+- [10. FAQ](#10-faq)
+- [11. Troubleshooting](#11-troubleshooting)
+- [12. Contributing](#12-contributing)
+- [13. Show Your Support](#13-show-your-support)
+- [14. License](#14-license)
 
 ---
 
-## How it works
+## 2. Overview
 
-```
-Google Spreadsheet
-┌─────────────────────────────────────────────┐
-│ Tab: "actions"                              │
-│ key              │ EN       │ FR            │
-│ save             │ Save     │ Enregistrer   │
-│ cancel           │ Cancel   │ Annuler       │
-│                             │               │
-│ Tab: "errors"               │               │
-│ key              │ EN       │ FR            │
-│ not_found        │ Not found│ Introuvable   │
-└─────────────────────────────────────────────┘
-             │
-             ▼  gsheets-i18n
-             
-en.json                         fr.json
-{                               {
-  "actions": {                    "actions": {
-    "save": "Save",                 "save": "Enregistrer",
-    "cancel": "Cancel"              "cancel": "Annuler"
-  },                            },
-  "errors": {                     "errors": {
-    "not_found": "Not found"        "not_found": "Introuvable"
-  }                             }
-}                               }
-```
-
-In your code you then access translations with dotted paths:
-
-```ts
-t("actions.save")       // → "Save"
-t("errors.not_found")   // → "Not found"
-```
+![gsheets-i18n Overview](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20overview.png)
 
 ---
 
-## Installation
+## 3. Quick Start
+
+### 3.1 Copy demo Google Sheet to your Drive
+
+> Import the [demo spreadsheet](https://github.com/Najtal/gsheets-i18n/raw/refs/heads/main/assets/sample-automated-i18n.xlsx) into your Google Drive and start right away.
+
+### 3.2 Install
 
 ```bash
-# As a dev dependency (recommended for most projects)
 npm install --save-dev gsheets-i18n
-
-# Or globally for CLI use
-npm install -g gsheets-i18n
 ```
 
-**Requirements:** Node.js ≥ 18
+### 3.3 Set up Google authentication
 
----
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a service account and download the JSON key
+3. Share your spreadsheet with the service account email (grant Viewer access)
 
-## Google Setup
-
-### 1. Create a Service Account
-
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Create or select a project
-3. Go to **APIs & Services → Credentials**
-4. Click **Create Credentials → Service Account**
-5. Give it a name and click **Done**
-6. Open the service account, go to **Keys → Add Key → Create new key → JSON**
-7. Download the JSON file — this is your `service-account.json`
-
-### 2. Enable the required APIs
-
-In **APIs & Services → Enabled APIs**, enable:
-
-- **Google Sheets API**
-- **Google Drive API** ← only required for [folder mode](#folder-mode)
-
-### 3. Share your spreadsheet with the service account
-
-Open your Google Spreadsheet, click **Share**, and add the service account email (looks like `name@project.iam.gserviceaccount.com`) with **Viewer** permissions.
-
-> ⚠️ Keep `service-account.json` out of version control. Add it to `.gitignore`.
-
----
-
-## Spreadsheet Format
-
-### Basic structure
-
-Each **tab** represents a namespace. Rows are translation keys, columns are languages.
-
-```
-┌──────────────────┬──────────────┬────────────────┬────────────────┐
-│ key              │ EN           │ FR             │ DE             │
-├──────────────────┼──────────────┼────────────────┼────────────────┤
-│ save             │ Save         │ Enregistrer    │ Speichern      │
-│ cancel           │ Cancel       │ Annuler        │ Abbrechen      │
-│ confirm          │ Confirm      │ Confirmer      │ Bestätigen     │
-└──────────────────┴──────────────┴────────────────┴────────────────┘
-```
-
-- **Row 1** — Header row: first cell is ignored (label for the key column), remaining cells are language identifiers.
-- **Column A** — Translation key. Supports **dot notation** for nesting: `modal.title` → `{ modal: { title: "…" } }`.
-- **Other columns** — One language per column. The header value is mapped to a locale code (see [Key Mapping](#key-mapping)).
-
-### Skipping tabs and columns
-
-Prefix a tab name or column header with `_` to exclude it from output:
-
-```
-Tab name "_notes"     → ignored entirely
-Column header "_dev"  → ignored entirely
-```
-
-### Dot notation in keys
-
-Use dots in your key to create nested output objects:
-
-```
-key                     │ EN
-modal.title             │ Confirm action
-modal.body              │ Are you sure?
-modal.actions.confirm   │ Yes, proceed
-modal.actions.cancel    │ Go back
-```
-
-Produces:
-
-```json
-{
-  "modal": {
-    "title": "Confirm action",
-    "body": "Are you sure?",
-    "actions": {
-      "confirm": "Yes, proceed",
-      "cancel": "Go back"
-    }
-  }
-}
-```
-
-### Multiple tabs
-
-Each tab becomes a top-level namespace in the output:
-
-```
-Tab "actions" + key "save"   → { "actions": { "save": "…" } }
-Tab "errors"  + key "404"    → { "errors":  { "404":  "…" } }
-```
-
----
-
-## CLI Usage
-
-### Sheet mode
-
-Extract from a single spreadsheet (all non-internal tabs):
+### 3.4 Pull translations
 
 ```bash
 gsheets-i18n sheet \
-  --sheet-id 4BxiM*****pms \
+  --sheet-id YOUR_SHEET_ID \
   --key ./service-account.json \
   --out ./src/locales
 ```
 
-Extract only one specific tab (by its numeric tab ID):
+Done. Your `en.json`, `fr.json`, etc. are ready.
 
-```bash
-gsheets-i18n sheet \
-  --sheet-id 4BxiM*****pms \
-  --key ./service-account.json \
-  --tab-id 0 \
-  --out ./src/locales
-```
-
-> **Finding the tab ID:** Right-click a tab in your browser → "Copy link" — the URL contains `#gid=<tabId>`.
-
-### Folder mode
-
-Scan a Drive folder recursively and extract from every spreadsheet found:
-
-```bash
-gsheets-i18n folder \
-  --folder-id 1A2B3C4D5E6F7G8H9I0J \
-  --key ./service-account.json \
-  --out ./src/locales
-```
-
-### Output example
-
-```
-  ✔  Done in 1.24s
-
-  📂  /your/project/src/locales
-
-      de.json  (3 top-level keys)
-      en.json  (3 top-level keys)
-      fr.json  (3 top-level keys)
-```
-
-### Adding to package.json scripts
+**Add to `package.json`:**
 
 ```json
 {
@@ -248,189 +83,242 @@ gsheets-i18n folder \
 
 ---
 
-## Programmatic API
+## 4. How It Works
 
-```ts
+### 4.1 Spreadsheet Format
+
+![Spreadsheet Setup GIF](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20add%20entry.gif)
+
+| key | EN | FR | DE |
+|-----|----|----|-----|
+| `save` | Save | Enregistrer | Speichern |
+| `modal.title` | Confirm action | Confirmer l'action | Aktion bestätigen |
+| `errors.404` | Not found | Non trouvé | Nicht gefunden |
+
+**Rules:**
+
+- **Row 1:** Language codes (EN, FR, DE, etc. — see [supported languages](#8-supported-languages))
+- **Column A:** Translation keys (dot notation creates nested objects)
+- **Other columns:** One language per column
+
+### 4.2 Output
+
+```json
+{
+  "save": "Save",
+  "modal": {
+    "title": "Confirm action"
+  },
+  "errors": {
+    "404": "Not found"
+  }
+}
+```
+
+### 4.3 Use Automatic or Static Values
+
+#### Use Automatic Translations
+
+![Use automatic translations](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20value.gif)
+
+#### Use Static Values
+
+Simply override the translated value and it becomes a static value.
+
+![Set static values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20set%20static%20value.gif)
+
+### 4.4 Multiple Tabs = Namespaces
+
+Each tab becomes a top-level namespace:
+
+```text
+Sheet tab "actions" + key "save"
+  → { "actions": { "save": "..." } }
+
+Sheet tab "errors" + key "404"
+  → { "errors": { "404": "..." } }
+```
+
+---
+
+## 5. How It Compares
+
+| Feature | **gsheets-i18n** | Crowdin | Lokalise | Phrase |
+|---------|------------------|---------|----------|--------|
+| **Setup time** | 5 min | 30+ min | 30+ min | Days |
+| **Cost** | Free | Freemium | $999+/mo | Enterprise |
+| **Uses Google Sheets** | ✅ | ❌ | ❌ | ❌ |
+| **No vendor lock-in** | ✅ | ❌ | ❌ | ❌ |
+| **Static JSON output** | ✅ | ❌ (SaaS API) | ❌ (SaaS API) | ❌ |
+| **Open source** | ✅ | ❌ | ❌ | ❌ |
+| **Works offline** | ✅ (JSON files) | ❌ | ❌ | ❌ |
+
+---
+
+## 6. CLI Reference
+
+### 6.1 Single Spreadsheet
+
+```bash
+gsheets-i18n sheet \
+  --sheet-id <spreadsheet-id> \
+  --key <path-to-service-account.json> \
+  --out <output-dir>
+```
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `-s, --sheet-id` | — | **Required.** Spreadsheet ID from URL |
+| `-k, --key` | `./service-account.json` | Service account JSON key |
+| `-o, --out` | `./i18n` | Output directory |
+| `-t, --tab-id` | all | Extract specific tab only |
+| `--include-empty` | false | Include keys with empty values |
+| `--indent` | `2` | JSON indentation (2, 4, or "tab") |
+
+**Find tab ID:** Right-click a sheet tab → Copy link → URL contains `#gid=<tabId>`
+
+### 6.2 Multiple Spreadsheets (Folder Mode)
+
+```bash
+gsheets-i18n folder \
+  --folder-id <drive-folder-id> \
+  --key <path-to-service-account.json> \
+  --out <output-dir>
+```
+
+Recursively extracts all spreadsheets from a Drive folder, creating a nested namespace structure.
+
+---
+
+## 7. Programmatic API
+
+```typescript
 import { extract } from "gsheets-i18n";
 
 const result = await extract({
   serviceAccountKey: "./service-account.json",
   source: {
     mode: "sheet",
-    spreadsheetId: "4BxiM*****pms",
+    spreadsheetId: "YOUR_SHEET_ID",
   },
   outputDir: "./src/locales",
 });
 
-console.log(`Generated ${result.files.length} files in ${result.durationMs}ms`);
-// → Generated 3 files in 1240ms
+console.log(`Generated ${result.files.length} files`);
 
 for (const file of result.files) {
-  console.log(`${file.locale}: ${file.path} (${file.keyCount} keys)`);
-}
-```
-
-The `extract()` function returns a `Promise<ExtractResult>`:
-
-```ts
-interface ExtractResult {
-  files: OutputFile[];   // One entry per generated file
-  durationMs: number;    // Total wall-clock time
-}
-
-interface OutputFile {
-  locale: string;        // e.g. "en", "fr", "zh-TW"
-  path: string;          // Absolute path to the written file
-  keyCount: number;      // Number of top-level namespace keys
+  console.log(`${file.locale}: ${file.keyCount} keys`);
 }
 ```
 
 ---
 
-## Key Mapping
+## 8. Supported Languages
 
-Column headers in your sheet are mapped to BCP-47 locale codes. A wide range of spellings is supported out of the box:
+Column headers are auto-mapped to language codes using [Google's official language codes](https://developers.google.com/workspace/admin/directory/v1/languages).
 
-| Header in sheet            | Output locale code |
-|----------------------------|--------------------|
-| `EN`, `ENG`, `English`     | `en`               |
-| `FR`, `FRE`, `French`, `Français` | `fr`      |
-| `DE`, `GER`, `German`, `Deutsch`  | `de`      |
-| `ZH-TW`, `CHT`, `繁體中文`  | `zh-TW`            |
-| `ZH-CN`, `CHS`, `简体中文`  | `zh-CN`            |
-| `JA`, `JPN`, `Japanese`, `日本語` | `ja`      |
-| … and many more            |                    |
+![Set languages, automatic update](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20language.gif)
 
-### Custom key map via the spreadsheet
+**Common examples:**
 
-Add a tab named `_keymap` to your spreadsheet to define project-specific mappings:
+| Header | Code | Header | Code |
+|--------|------|--------|------|
+| EN, English | `en` | ES, Spanish | `es` |
+| EN-GB, English (UK) | `en-GB` | PT-BR, Portuguese (Brazil) | `pt-BR` |
+| FR, French | `fr` | DE, German | `de` |
+| FR-CA, French (Canada) | `fr-CA` | JA, Japanese | `ja` |
+| ZH-CN, Chinese (Simplified) | `zh-CN` | ZH-TW, Chinese (Traditional) | `zh-TW` |
 
-```
-┌──────────────┬───────┬──────┬───────┐
-│ (ignored)    │ fr    │ en   │ pt-BR │
-├──────────────┼───────┼──────┼───────┤
-│ Français     │ fr    │      │       │
-│ Anglais      │       │ en   │       │
-│ Brésilien    │       │      │ pt-BR │
-└──────────────┴───────┴──────┴───────┘
-```
-
-### Custom key map via CLI or API
-
-Pass a JSON file to the CLI:
-
-```bash
-gsheets-i18n sheet --sheet-id … --key-map ./my-key-map.json
-```
-
-Or pass an object to the API:
-
-```ts
-await extract({
-  // …
-  localeKeyMap: {
-    "Français": "fr",
-    "Anglais": "en",
-    "Brésilien": "pt-BR",
-  },
-});
-```
-
-**Priority (highest → lowest):**
-1. `_keymap` tab in the spreadsheet
-2. `localeKeyMap` option / `--key-map` file
-3. Built-in defaults
+**Supports 100+ languages.** See full list in [Google's documentation](https://developers.google.com/workspace/admin/directory/v1/languages).
 
 ---
 
-## Folder Mode
+## 9. Advanced Features
 
-In folder mode, the library recursively scans a Google Drive folder:
+### 9.1 Skip Tabs & Columns
 
-- Each **sub-folder** name becomes a path component of the namespace
-- Each **spreadsheet** name becomes the innermost namespace component
-- Files and folders starting with `_` are **skipped**
-- A spreadsheet named `_keymap` in any folder applies its mappings to everything inside that folder
+Prefix with `_` to exclude:
 
-**Example Drive structure:**
+- Tab `_notes` — ignored entirely
+- Column `_dev` — excluded from output
 
-```
-📁 my-translations/
-├── 📁 app/
-│   ├── 📄 actions      ← spreadsheet
-│   └── 📄 errors       ← spreadsheet
-└── 📄 common           ← spreadsheet
-```
+### 9.2 Custom Locale Mapping
 
-Produces keys structured as:
+Create a tab named `_keymap` to override header-to-locale mapping:
 
-```json
-{
-  "app": {
-    "actions": { "save": "…" },
-    "errors":  { "404": "…" }
-  },
-  "common": { "yes": "…" }
-}
-```
+| — | `fr` | `en` |
+|---|------|------|
+| Français | `fr` | `en` |
+| English | `en` | `en` |
 
 ---
 
-## Configuration Reference
+## 10. FAQ
 
-### `extract(options)` — full options
+**Q: Can non-developers edit translations?**  
+A: Yes. Share the Google Sheet with your team. No coding knowledge needed.
 
-| Option              | Type                        | Default                  | Description |
-|---------------------|-----------------------------|--------------------------|-------------|
-| `serviceAccountKey` | `string \| ServiceAccountKey` | *(required)*           | Path to key file or parsed key object |
-| `source`            | `SheetModeOptions \| FolderModeOptions` | *(required)* | What to extract |
-| `outputDir`         | `string`                    | `"./i18n"`               | Directory for output files |
-| `localeKeyMap`      | `Record<string, string>`    | `{}`                     | Custom header → locale mappings |
-| `includeEmpty`      | `boolean`                   | `false`                  | Write keys with empty values |
-| `indent`            | `number \| string`          | `2`                      | JSON indentation (`2`, `4`, `"\t"`) |
+**Q: What happens to translations when I pull?**  
+A: New JSON files are generated in your `./src/locales` folder. Review and commit to Git.
 
-### `SheetModeOptions`
+**Q: Can I use this with my existing translations?**  
+A: Yes. Copy your existing JSON structure into Google Sheets (use dot notation for nesting).
 
-| Option          | Type     | Default | Description |
-|-----------------|----------|---------|-------------|
-| `mode`          | `"sheet"` | *(required)* | |
-| `spreadsheetId` | `string` | *(required)* | Google Spreadsheet ID |
-| `tabId`         | `number` | all tabs | Specific tab to extract |
-| `startColumn`   | `number` | `0`     | Skip leading columns |
+**Q: Does this work offline?**  
+A: The CLI requires internet to fetch from Google Sheets, but the output JSON works offline.
 
-### `FolderModeOptions`
+**Q: Can I automate this with CI/CD?**  
+A: Yes. Add the service account key to your repo secrets and call `npm run i18n:pull` in your GitHub Actions/GitLab CI workflow.
 
-| Option     | Type      | Default | Description |
-|------------|-----------|---------|-------------|
-| `mode`     | `"folder"` | *(required)* | |
-| `folderId` | `string`  | *(required)* | Google Drive folder ID |
+**Q: How often should I pull translations?**  
+A: As often as needed. Many teams pull before each deployment, or on every commit to the `main` branch.
 
-### CLI flags — `sheet` command
+**Q: What if a translation is missing?**  
+A: By default, missing translations are skipped. Use `--include-empty` to include empty cells in output.
 
-| Flag                      | Default                  | Description |
-|---------------------------|--------------------------|-------------|
-| `-s, --sheet-id <id>`     | *(required)*             | Spreadsheet ID |
-| `-k, --key <path>`        | `./service-account.json` | Key file path |
-| `-o, --out <path>`        | `./i18n`                 | Output directory |
-| `-t, --tab-id <id>`       | all tabs                 | Numeric tab ID |
-| `--start-column <n>`      | `0`                      | Skip leading columns |
-| `--include-empty`         | `false`                  | Include empty values |
-| `--indent <n\|"tab">`     | `2`                      | JSON indentation |
-| `--key-map <path>`        | —                        | Custom key map JSON |
+**Q: How does I support versioning?**  
+A: You can support versioning using google drive versioning feature.
 
-### CLI flags — `folder` command
-
-| Flag                  | Default                  | Description |
-|-----------------------|--------------------------|-------------|
-| `-f, --folder-id <id>` | *(required)*            | Drive folder ID |
-| `-k, --key <path>`    | `./service-account.json` | Key file path |
-| `-o, --out <path>`    | `./i18n`                 | Output directory |
-| `--include-empty`     | `false`                  | Include empty values |
-| `--indent <n\|"tab">` | `2`                      | JSON indentation |
-| `--key-map <path>`    | —                        | Custom key map JSON |
+**Q: Can I use this for pluralization or complex formatting?**  
+A: Yes. Store JSON-formatted values in your cells, e.g., `{"one":"1 item","other":"{{count}} items"}`, and they'll be parsed correctly. (This might require an updated mapper or pipe depending on your front end framework)
 
 ---
 
-## License
+## 11. Troubleshooting
+
+### 11.1 "Permission denied" Error
+
+- Verify the service account email is **Viewer** access on the spreadsheet
+- Check the service account key file exists and is readable
+
+### 11.2 No files generated
+
+- Verify the first row contains language codes
+- Check that key cells (Column A) are not empty
+- Ensure you have at least one column with translations
+
+### 11.3 Language code not recognized
+
+Verify the column header matches an official code from [Google's language list](https://developers.google.com/workspace/admin/directory/v1/languages).
+
+---
+
+## 12. Contributing
+
+Contributions welcome! Please open an issue or submit a PR on [GitHub](https://github.com/Najtal/gsheets-i18n).
+
+---
+
+## 13. Show Your Support
+
+💡 **Enjoying gsheets-i18n?** [⭐ Star us on GitHub](https://github.com/Najtal/gsheets-i18n) to show your support!
+
+**Found a bug?** [Open an issue](https://github.com/Najtal/gsheets-i18n/issues)
+
+**Have an idea?** [Start a discussion](https://github.com/Najtal/gsheets-i18n/discussions)
+
+---
+
+## 14. License
 
 MIT
