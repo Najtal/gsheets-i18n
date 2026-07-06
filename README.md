@@ -6,7 +6,13 @@
 
 ---
 
-## 1. Why gsheets-i18n?
+## 1. Overview
+
+![gsheets-i18n Overview](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20overview.png)
+
+---
+
+## 2. Why gsheets-i18n?
 
 - **Single source of truth** — Translators edit Google Sheets, developers pull JSON
 - **Real-time collaboration** — No version conflicts, no code required for non-devs
@@ -19,8 +25,8 @@
 
 ## Table of Contents
 
-- [1. Why gsheets-i18n?](#1-why-gsheets-i18n)
-- [2. Overview](#2-overview)
+- [1. Overview](#2-overview)
+- [2. Why gsheets-i18n?](#1-why-gsheets-i18n)
 - [3. Quick Start](#3-quick-start)
 - [4. How It Works](#4-how-it-works)
 - [5. How It Compares](#5-how-it-compares)
@@ -33,12 +39,6 @@
 - [12. Contributing](#12-contributing)
 - [13. Show Your Support](#13-show-your-support)
 - [14. License](#14-license)
-
----
-
-## 2. Overview
-
-![gsheets-i18n Overview](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20overview.png)
 
 ---
 
@@ -115,19 +115,15 @@ Done. Your `en.json`, `fr.json`, etc. are ready.
 }
 ```
 
-### 4.3 Use Automatic or Static Values
+### 4.3 Update translations
 
-#### Use Automatic Translations
+![Update values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20value.gif)
 
-![Use automatic translations](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20change%20value.gif)
+### 4.4 Use Automatic or Static Values
 
-#### Use Static Values
+![Use static values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20set%20static%20value.gif)
 
-Simply override the translated value and it becomes a static value.
-
-![Set static values](https://raw.githubusercontent.com/Najtal/gsheets-i18n/refs/heads/main/assets/i18n%20-%20set%20static%20value.gif)
-
-### 4.4 Multiple Tabs = Namespaces
+### 4.5 Multiple Tabs = Namespaces
 
 Each tab becomes a top-level namespace:
 
