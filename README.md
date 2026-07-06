@@ -242,6 +242,9 @@ Prefix with `_` to exclude:
 - Tab `_notes` — ignored entirely
 - Column `_dev` — excluded from output
 
+If rows have no values, those are skipped as well. Using the template, prefix the key with `_` to skip that row.
+- Row with key `_ menu` — excluded from output.
+
 ### 9.2 Custom Locale Mapping
 
 Create a tab named `_keymap` to override header-to-locale mapping:
